@@ -2,6 +2,10 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.*;
+import java.util.Collections;
+import java.util.HashMap;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -132,7 +136,48 @@ public class JavaTasks {
      * 2
      */
     static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+        var accordance = new HashMap<Integer, Integer>();
+        var data  = new Integer[] {Integer.MAX_VALUE, Integer.MIN_VALUE};
+        try (var fr = new FileReader(inputName)) {
+            var reader = new BufferedReader(fr);
+            var line = reader.readLine();
+            while (line != null) {
+                var num = Integer.parseInt(line);
+                System.out.println(line);
+                if (accordance.containsKey(num))
+                    accordance.put(num, accordance.get(num) + 1);
+                else
+                    accordance.put(num, 1);
+                if (data[1] < accordance.get(num) || (data[1] <= accordance.get(num) && data[0] > num)) {
+                    data[1] = accordance.get(num);
+                    data[0] = num;
+                }
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("! " + data[0]);
+        int max = Collections.max(accordance.values());
+        System.out.println(accordance.toString());
+        try (var writer = new FileWriter(outputName)) {
+            try (var read = new FileReader(inputName)) {
+                var reader = new BufferedReader(read);
+                var line = reader.readLine();
+                while (line != null) {
+                    if (Integer.parseInt(line) != data[0])
+                        writer.write(line + '\n');
+                    line = reader.readLine();
+                }
+
+            }
+            for (var i = data[1]; i > 0; i--)
+                writer.write(data[0].toString() + '\n');
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**
