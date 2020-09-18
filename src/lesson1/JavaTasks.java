@@ -2,9 +2,12 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
-import java.io.*;
-import java.util.Collections;
-import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -136,41 +139,52 @@ public class JavaTasks {
      * 2
      */
     static public void sortSequence(String inputName, String outputName) {
-        var accordance = new HashMap<Integer, Integer>();
+        var list = new ArrayList<Integer>();
         var data  = new Integer[] {Integer.MAX_VALUE, Integer.MIN_VALUE};
         try (var fr = new FileReader(inputName)) {
             var reader = new BufferedReader(fr);
             var line = reader.readLine();
             while (line != null) {
-                var num = Integer.parseInt(line);
-                System.out.println(line);
-                if (accordance.containsKey(num))
-                    accordance.put(num, accordance.get(num) + 1);
-                else
-                    accordance.put(num, 1);
-                if (data[1] < accordance.get(num) || (data[1] <= accordance.get(num) && data[0] > num)) {
-                    data[1] = accordance.get(num);
-                    data[0] = num;
-                }
+                list.add(Integer.parseInt(line));
                 line = reader.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("! " + data[0]);
-        int max = Collections.max(accordance.values());
-        System.out.println(accordance.toString());
-        try (var writer = new FileWriter(outputName)) {
-            try (var read = new FileReader(inputName)) {
-                var reader = new BufferedReader(read);
-                var line = reader.readLine();
-                while (line != null) {
-                    if (Integer.parseInt(line) != data[0])
-                        writer.write(line + '\n');
-                    line = reader.readLine();
+        var array = list.stream().mapToInt(i->i).toArray();
+        System.out.println(Arrays.toString(array));
+        Sorts.mergeSort(array);
+        System.out.println(Arrays.toString(array));
+        data[0] = array[0];
+        var mem = 0;
+        var mem2 = 1;
+        for (var i = 0; i < array.length - 1; i++){
+            if (array[i + 1] == array[i]) {
+                mem = array[i];
+                mem2++;
+            }
+            else if (array[i+1] != array[i]) {
+                if ((mem2 > data[1]) || (mem2 == data[1] && mem < data[0])){
+                    data[0] = mem;
+                    data[1] = mem2;
+                }
+                mem = array[i+1];
+                mem2 = 1;
+            }
+            if (i+1 == array.length - 1 && array[i + 1] == array[i])
+                if ((mem2 > data[1]) || (mem2 == data[1] && mem < data[0])) {
+                    data[0] = mem;
+                    data[1] = mem2;
                 }
 
-            }
+
+        }
+
+        System.out.println(data[0] + " " + data[1]);
+        try (var writer = new FileWriter(outputName)) {
+            for (var element : list)
+                if (!element.equals(data[0]))
+                    writer.write(element.toString() + '\n');
             for (var i = data[1]; i > 0; i--)
                 writer.write(data[0].toString() + '\n');
         } catch (IOException e) {
