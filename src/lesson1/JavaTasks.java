@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static lesson1.Sorts.*;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -104,20 +106,27 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
+
+    /*
+     * время:  O(n);
+     * память: O(n);
+     */
+
     static public void sortTemperatures(String inputName, String outputName) {
         var list = new ArrayList<Integer>();
         try (var fr = new FileReader(inputName)) {
             var reader = new BufferedReader(fr);
             var line = reader.readLine();
             while (line != null) {
-                list.add(Integer.parseInt(String.format("%.1f", Float.parseFloat(line) + 273).replace(",", "")));
+                if (!line.trim().isBlank())
+                    list.add(Integer.parseInt(String.format("%.1f", Float.parseFloat(line.trim()) + 273).replace(",", "")));
                 line = reader.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         var array = list.stream().mapToInt(i->i).toArray();
-        Sorts.mergeSort(array);
+        array = countingSort(array, 7730);
         try (var writer = new FileWriter(outputName)) {
             for (var element : array) {
                 var a = String.valueOf(element - 2730);
@@ -162,6 +171,12 @@ public class JavaTasks {
      * 2
      * 2
      */
+
+    /*
+     * время:  O(n * log n);
+     * память: O(n);
+     */
+
     static public void sortSequence(String inputName, String outputName) {
         var list = new ArrayList<Integer>();
         var data  = new Integer[] {Integer.MAX_VALUE, Integer.MIN_VALUE};
@@ -169,14 +184,15 @@ public class JavaTasks {
             var reader = new BufferedReader(fr);
             var line = reader.readLine();
             while (line != null) {
-                list.add(Integer.parseInt(line));
+                if (!line.trim().isBlank())
+                    list.add(Integer.parseInt(line.trim()));
                 line = reader.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         var array = list.stream().mapToInt(i->i).toArray();
-        Sorts.mergeSort(array);
+        mergeSort(array);
         data[0] = array[0];
         var num = 0;
         var count = 1;
