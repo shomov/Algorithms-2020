@@ -20,4 +20,4 @@ gradlew.bat
 *.iws
 *.zip
 *.log
-.idea/*
+.idea
