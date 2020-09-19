@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -106,7 +105,32 @@ public class JavaTasks {
      * 121.3
      */
     static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+        var list = new ArrayList<Integer>();
+        try (var fr = new FileReader(inputName)) {
+            var reader = new BufferedReader(fr);
+            var line = reader.readLine();
+            while (line != null) {
+                list.add(Integer.parseInt(String.format("%.1f", Float.parseFloat(line) + 273).replace(",", "")));
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        var array = list.stream().mapToInt(i->i).toArray();
+        Sorts.mergeSort(array);
+        try (var writer = new FileWriter(outputName)) {
+            for (var element : array) {
+                var a = String.valueOf(element - 2730);
+                if (a.matches("-?\\d{2,}"))
+                    writer.write(a.substring(0, a.length() - 1) + '.' + a.substring(a.length() - 1) + '\n');
+                else if (a.matches("\\d"))
+                    writer.write("0." + a.substring(a.length() - 1) + '\n');
+                else
+                    writer.write("-0." + a.substring(a.length() - 1) + '\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -152,35 +176,29 @@ public class JavaTasks {
             e.printStackTrace();
         }
         var array = list.stream().mapToInt(i->i).toArray();
-        System.out.println(Arrays.toString(array));
         Sorts.mergeSort(array);
-        System.out.println(Arrays.toString(array));
         data[0] = array[0];
-        var mem = 0;
-        var mem2 = 1;
+        var num = 0;
+        var count = 1;
         for (var i = 0; i < array.length - 1; i++){
             if (array[i + 1] == array[i]) {
-                mem = array[i];
-                mem2++;
+                num = array[i];
+                count++;
             }
             else if (array[i+1] != array[i]) {
-                if ((mem2 > data[1]) || (mem2 == data[1] && mem < data[0])){
-                    data[0] = mem;
-                    data[1] = mem2;
+                if ((count > data[1]) || (count == data[1] && num < data[0])){
+                    data[0] = num;
+                    data[1] = count;
                 }
-                mem = array[i+1];
-                mem2 = 1;
+                num = array[i+1];
+                count = 1;
             }
             if (i+1 == array.length - 1 && array[i + 1] == array[i])
-                if ((mem2 > data[1]) || (mem2 == data[1] && mem < data[0])) {
-                    data[0] = mem;
-                    data[1] = mem2;
+                if ((count > data[1]) || (count == data[1] && num < data[0])) {
+                    data[0] = num;
+                    data[1] = count;
                 }
-
-
         }
-
-        System.out.println(data[0] + " " + data[1]);
         try (var writer = new FileWriter(outputName)) {
             for (var element : list)
                 if (!element.equals(data[0]))
@@ -190,8 +208,6 @@ public class JavaTasks {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**
