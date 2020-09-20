@@ -97,8 +97,34 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+
+    /*
+     * время:  O(n * k);
+     * память: O(n * k);
+     */
+
+    static public String longestCommonSubstring(String first, String second) {
+        var word = "";
+        var i = 0;
+        while (i < first.length()){
+            var check = false;
+            for (var j = i; j < first.length() - 1; j++) {
+                var substring = first.substring(i, j);
+                if (second.contains(substring)){
+                    if (substring.length() > word.length()) {
+                        word = substring;
+                        check = true;
+                    }
+                }
+                else {
+                    if (check)
+                        i += word.length();
+                    break;
+                }
+            }
+            i++;
+        }
+        return word;
     }
 
     /**
