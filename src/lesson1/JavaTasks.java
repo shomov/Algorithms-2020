@@ -112,7 +112,9 @@ public class JavaTasks {
      * память: O(n);
      */
 
-    static public void sortTemperatures(String inputName, String outputName) {
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        var range = 7730;
+        var negativeRange = 2730;
         var list = new ArrayList<Integer>();
         try (var fr = new FileReader(inputName)) {
             var reader = new BufferedReader(fr);
@@ -123,13 +125,13 @@ public class JavaTasks {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException(e);
         }
         var array = list.stream().mapToInt(i->i).toArray();
-        array = countingSort(array, 7730);
+        array = countingSort(array, range);
         try (var writer = new FileWriter(outputName)) {
             for (var element : array) {
-                var a = String.valueOf(element - 2730);
+                var a = String.valueOf(element - negativeRange);
                 if (a.matches("-?\\d{2,}"))
                     writer.write(a.substring(0, a.length() - 1) + '.' + a.substring(a.length() - 1) + '\n');
                 else if (a.matches("\\d"))
@@ -138,7 +140,7 @@ public class JavaTasks {
                     writer.write("-0." + a.substring(a.length() - 1) + '\n');
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException(e);
         }
     }
 
@@ -177,7 +179,7 @@ public class JavaTasks {
      * память: O(n);
      */
 
-    static public void sortSequence(String inputName, String outputName) {
+    static public void sortSequence(String inputName, String outputName) throws IOException {
         var list = new ArrayList<Integer>();
         var data  = new Integer[] {Integer.MAX_VALUE, Integer.MIN_VALUE};
         try (var fr = new FileReader(inputName)) {
@@ -189,7 +191,7 @@ public class JavaTasks {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException(e);
         }
         var array = list.stream().mapToInt(i->i).toArray();
         mergeSort(array);
@@ -202,7 +204,7 @@ public class JavaTasks {
                 count++;
             }
             else if (array[i+1] != array[i]) {
-                if ((count > data[1]) || (count == data[1] && num < data[0])){
+                if (count > data[1] || (count == data[1] && num < data[0])){
                     data[0] = num;
                     data[1] = count;
                 }
@@ -210,7 +212,7 @@ public class JavaTasks {
                 count = 1;
             }
             if (i+1 == array.length - 1 && array[i + 1] == array[i])
-                if ((count > data[1]) || (count == data[1] && num < data[0])) {
+                if (count > data[1] || (count == data[1] && num < data[0])) {
                     data[0] = num;
                     data[1] = count;
                 }
@@ -222,7 +224,7 @@ public class JavaTasks {
             for (var i = data[1]; i > 0; i--)
                 writer.write(data[0].toString() + '\n');
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException(e);
         }
     }
 
