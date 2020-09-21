@@ -138,6 +138,10 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
 
+    /*
+     * время:  O(n * log log n);
+     * память: O(n);
+     */
 
     static public int calcPrimesNumber(int limit) {
         if (limit <= 1)
