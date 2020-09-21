@@ -137,7 +137,25 @@ public class JavaAlgorithms {
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
      */
+
+
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+        if (limit <= 1)
+            return 0;
+        var table = new boolean[limit + 1];
+        var i = 2;
+        var notPrime = 1;
+        while (Math.pow(i, 2) <= limit) {
+            var j = Math.pow(i, 2);
+            while (j <= limit) {
+                if (!table[(int) j]) {
+                    table[(int) j] = true;
+                    notPrime++;
+                }
+                j += i;
+            }
+            i++;
+        }
+        return limit - notPrime;
     }
 }
