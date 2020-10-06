@@ -104,27 +104,20 @@ public class JavaAlgorithms {
      */
 
     static public String longestCommonSubstring(String first, String second) {
-        var word = "";
-        var i = 0;
-        while (i < first.length()){
-            var check = false;
-            for (var j = i; j < first.length() - 1; j++) {
-                var substring = first.substring(i, j);
-                if (second.contains(substring)){
-                    if (substring.length() > word.length()) {
-                        word = substring;
-                        check = true;
+        if (first.isBlank() || second.isBlank()) return "";
+        var table = new int[first.length() + 1][second.length() + 1];
+        var subLength = 0;
+        var ind = 0;
+        for (var i = 0; i < second.length(); i++)
+            for (var j = 0; j < second.length(); j++)
+                if (first.charAt(i) == second.charAt(j)) {
+                    table[i + 1][j + 1] = table[i][j] + 1;
+                    if (table[i + 1][j + 1] > subLength) {
+                        subLength = table[i + 1][j + 1];
+                        ind = i + 1;
                     }
                 }
-                else {
-                    if (check)
-                        i += word.length();
-                    break;
-                }
-            }
-            i++;
-        }
-        return word;
+        return first.substring(ind - subLength, ind);
     }
 
     /**
