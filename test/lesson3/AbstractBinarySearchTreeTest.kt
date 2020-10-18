@@ -106,6 +106,32 @@ abstract class AbstractBinarySearchTreeTest {
         }
     }
 
+    protected fun doPrivateRemoveTest() {
+        val binarySet = create()
+        binarySet.add(81)
+        binarySet.add(30)
+        binarySet.add(82)
+        binarySet.add(28)
+        binarySet.add(98)
+        binarySet.add(55)
+        binarySet.add(78)
+        binarySet.add(86)
+        binarySet.add(65)
+        binarySet.add(91)
+        binarySet.add(73)
+        binarySet.add(52)
+        binarySet.add(60)
+        binarySet.add(7)
+        binarySet.add(1)
+        binarySet.add(24)
+        binarySet.add(37)
+        binarySet.add(72)
+        binarySet.remove(0)
+        val controlSet = mutableSetOf(30, 82, 28, 98, 55, 78, 86, 65, 91, 73, 52, 60, 7, 1, 24, 37, 72, 81)
+        assertEquals(binarySet, controlSet)
+        assertFalse(binarySet.remove(0))
+    }
+
     protected fun doRemoveTest() {
         implementationTest { create().remove(0) }
         val random = Random()

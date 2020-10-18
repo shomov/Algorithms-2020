@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> implements CheckableSortedSet<T> {
 
     private static class Node<T> {
-        final T value;
+        T value;
         Node<T> left = null;
         Node<T> right = null;
 
@@ -99,10 +99,50 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
      *
      * Средняя
      */
+
+    /*
+     * время:  O(log n);
+     * память: O(log n);
+     */
+
+    private int checkingForChildren(BinarySearchTree.Node<T> value) {
+        if (value.right != null && value.left != null) return 2;
+        else if (value.right != null || value.left != null) return 1;
+        else return 0;
+    }
+
+    private Node<T> nearestValue(Node<T> root) {
+        var r = root;
+        while (r.right != null) r = r.right;
+        return r;
+    }
+
+    private Node<T> remove (Node<T> branch, T value) {
+        var way = value.compareTo(branch.value);
+        if (way == 0) {
+            var num = checkingForChildren(branch);
+            if (num == 0)
+                return null;
+            else if (num == 1)
+                if (branch.right == null) return branch.left;
+                else return branch.right;
+            else {
+                var repl = nearestValue(branch.left).value;
+                remove(branch, repl);
+                branch.value = repl;
+            }
+        }
+        else if (way > 0) branch.right = remove(branch.right, value);
+        else branch.left = remove(branch.left, value);
+        return branch;
+    }
+
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        if (!contains(o) || root == null) return false;
+        root = remove(root, (T) o);
+        size--;
+        return true;
     }
 
     @Nullable
@@ -116,11 +156,18 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
     public Iterator<T> iterator() {
         return new BinarySearchTreeIterator();
     }
-
     public class BinarySearchTreeIterator implements Iterator<T> {
-
+        private final ArrayDeque<Node<T>> que = new ArrayDeque<>();
+        Node<T> cur;
         private BinarySearchTreeIterator() {
-            // Добавьте сюда инициализацию, если она необходима.
+            walker(root);
+        }
+        public void walker(Node<T> node){
+            var n = node;
+            while (n != null) {
+                que.push(n);
+                n = n.left;
+            }
         }
 
         /**
@@ -133,10 +180,13 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          *
          * Средняя
          */
+        /*
+         * время:  O(1);
+         * память: O(1);
+         */
         @Override
         public boolean hasNext() {
-            // TODO
-            throw new NotImplementedError();
+            return !que.isEmpty();
         }
 
         /**
@@ -152,10 +202,18 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          *
          * Средняя
          */
+
+        /*
+         * время:  O(log n);
+         * память: O(log n);
+         */
+
         @Override
         public T next() {
-            // TODO
-            throw new NotImplementedError();
+            if (!hasNext()) throw new IllegalStateException();
+            cur = que.pop();
+            walker(cur.right);
+            return cur.value;
         }
 
         /**
@@ -170,10 +228,17 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          *
          * Сложная
          */
+
+        /*
+         * время:  O(log n);
+         * память: O(log n);
+         */
+
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            if (cur != null) BinarySearchTree.this.remove(cur.value);
+            else throw new IllegalStateException();
+            cur = null;
         }
     }
 
