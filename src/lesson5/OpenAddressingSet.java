@@ -163,9 +163,9 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
         @Override
         public void remove() {
             if (index == 0) throw new IllegalStateException();
-            storage[index--] = removed;
-            size--;
             index--;
+            storage[index] = removed;
+            size--;
         }
     }
 }
