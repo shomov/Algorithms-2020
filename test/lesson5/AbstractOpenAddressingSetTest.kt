@@ -78,6 +78,23 @@ abstract class AbstractOpenAddressingSetTest {
         }
     }
 
+    protected fun doRemoveTest2() {
+        val openAddressingSet = create<String>(6)
+        openAddressingSet.add("hbvdj")
+        openAddressingSet.add("egr")
+        openAddressingSet.add("regh")
+        openAddressingSet.add("effe")
+        openAddressingSet.add("htegd")
+        openAddressingSet.add("erghrhds")
+        openAddressingSet.add("reght")
+        assertFalse(
+            openAddressingSet.remove("bske")
+        )
+        assertTrue(
+            openAddressingSet.remove("egr")
+        )
+    }
+
     protected fun doIteratorTest() {
         val random = Random()
         for (iteration in 1..100) {
@@ -118,6 +135,33 @@ abstract class AbstractOpenAddressingSetTest {
             }
             println("All clear!")
         }
+    }
+
+    protected fun doIteratorTest2() {
+        val openAddressingSet = create<String>(6)
+        openAddressingSet.add("hbvdj")
+        openAddressingSet.add("egr")
+        openAddressingSet.add("regh")
+        openAddressingSet.add("effe")
+        openAddressingSet.add("htegd")
+        openAddressingSet.add("erghrhds")
+        openAddressingSet.add("reght")
+        assertFalse(
+            openAddressingSet.remove("bske")
+        )
+        assertTrue(
+            openAddressingSet.remove("egr")
+        )
+
+        val iterator = openAddressingSet.iterator()
+        while (iterator.hasNext()) {
+            if (iterator.next() == "egr") {
+                iterator.remove()
+            }
+        }
+        assertFalse(
+            openAddressingSet.contains("egr")
+        )
     }
 
     protected fun doIteratorRemoveTest() {
