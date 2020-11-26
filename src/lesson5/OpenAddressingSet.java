@@ -96,7 +96,8 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
      */
 
     /*
-     * время:  O(n);
+     * https://courses.csail.mit.edu/6.006/fall11/lectures/lecture10.pdf
+     * время:  O(1/(1 − a)), где a = n/m;
      * память: O(1);
      */
     @Override
