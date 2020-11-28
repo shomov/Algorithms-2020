@@ -53,10 +53,7 @@ public class JavaDynamicTasks {
 
         return substring.toString();
     }
-    /*
-     * время:  O(n * n);
-     * память: O(n);
-     */
+
     /**
      * Наибольшая возрастающая подпоследовательность
      * Сложная
